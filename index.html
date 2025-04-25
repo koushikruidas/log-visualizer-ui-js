@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Visualizer</title>
+    <style>
+        body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+        color: #333;
+    }
+
+    h1 {
+        text-align: center;
+        color: #4CAF50;
+        margin-top: 20px;
+    }
+
+    div {
+        margin: 20px auto;
+        max-width: 800px;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: bold;
+    }
+
+    input, button {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    button {
+        background-color: #4CAF50;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+
+    #pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    #pagination button {
+        margin: 0 10px;
+        padding: 10px 20px;
+    }
+
+    #pagination span {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    em {
+        font-style: normal; /* Remove default italic style */
+        background-color: yellow; /* Highlight background */
+        font-weight: bold; /* Make text bold */
+        color: black; /* Set text color */
+    }
+    </style>
+</head>
+<body>
+    <h1>Log Visualizer</h1>
+    <div id="searchBox">
+        <label for="index">Index:</label>
+        <input type="text" id="index" placeholder="Enter index">
+
+        <label for="level">Level:</label>
+        <input type="text" id="level" placeholder="Enter level">
+
+        <label for="serviceName">Service Name:</label>
+        <input type="text" id="serviceName" placeholder="Enter service name">
+
+        <label for="keyword">Keyword:</label>
+        <input type="text" id="keyword" placeholder="Enter keyword">
+
+        <label for="startDate">Start Date:</label>
+        <input type="datetime-local" id="startDate">
+
+        <label for="endDate">End Date:</label>
+        <input type="datetime-local" id="endDate">
+
+        <button id="searchButton">Search</button>
+    </div>
+    <table id="logTable">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Level</th>
+                <th>Service Name</th>
+                <th>Message</th>
+                <th>Exception</th>
+                <th>Host Name</th>
+                <th>Host IP</th>
+                <th>Raw Log</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be dynamically inserted here -->
+        </tbody>
+    </table>
+    <div id="pagination">
+        <button id="prevPage" disabled>Previous</button>
+        <span id="currentPage">Page 1</span>
+        <button id="nextPage">Next</button>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
