@@ -388,3 +388,26 @@ em {
 .hidden {
     display: none;
 }
+
+/* Index Validation Styles */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+#index.error {
+    border-color: #dc2626 !important;
+    animation: shake 0.5s ease-in-out;
+}
+
+#indexError {
+    color: #dc2626;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: none;
+}
+
+#indexError.show {
+    display: block;
+}

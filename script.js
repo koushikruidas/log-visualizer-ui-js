@@ -122,10 +122,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function performSearch() {
         const index = document.getElementById('index').value;
+        const indexInput = document.getElementById('index');
+        const indexError = document.getElementById('indexError');
+
         if (!index) {
-            alert('Index is required');
+            indexInput.classList.add('error');
+            indexError.classList.add('show');
+            
+            // Remove error class after animation completes
+            setTimeout(() => {
+                indexInput.classList.remove('error');
+            }, 500);
             return;
         }
+
+        // Clear error state if index is valid
+        indexInput.classList.remove('error');
+        indexError.classList.remove('show');
 
         const params = new URLSearchParams();
         params.append('index', index);
