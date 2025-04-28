@@ -2,12 +2,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
     const searchButton = document.getElementById('searchButton');
     const logsTableBody = document.getElementById('logsTableBody');
-    const totalHitsElement = document.getElementById('totalHits');
-    const currentPageElement = document.getElementById('currentPage');
-    const prevPageButton = document.getElementById('prevPage');
-    const nextPageButton = document.getElementById('nextPage');
-    const pageInput = document.getElementById('pageInput');
-    const totalPagesElement = document.getElementById('totalPages');
+    const totalHitsElements = document.querySelectorAll('#totalHits');
+    const currentPageElements = document.querySelectorAll('#currentPage');
+    const prevPageButtons = document.querySelectorAll('#prevPage');
+    const nextPageButtons = document.querySelectorAll('#nextPage');
+    const pageInputs = document.querySelectorAll('#pageInput');
+    const totalPagesElements = document.querySelectorAll('#totalPages');
     const rawLogModal = document.getElementById('rawLogModal');
     const rawLogContent = document.getElementById('rawLogContent');
     const closeModal = document.querySelector('.close');
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const customDateRange = document.getElementById('customDateRange');
     const startDateInput = document.getElementById('startDate');
     const endDateInput = document.getElementById('endDate');
-    const pageSizeSelect = document.getElementById('pageSize');
+    const pageSizeSelects = document.querySelectorAll('#pageSize');
 
     // State
     let currentPage = 0;
@@ -24,12 +24,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Event Listeners
     searchButton.addEventListener('click', performSearch);
-    prevPageButton.addEventListener('click', () => changePage(currentPage - 1));
-    nextPageButton.addEventListener('click', () => changePage(currentPage + 1));
-    pageInput.addEventListener('change', handlePageInputChange);
+    prevPageButtons.forEach(button => {
+        button.addEventListener('click', () => changePage(currentPage - 1));
+    });
+    nextPageButtons.forEach(button => {
+        button.addEventListener('click', () => changePage(currentPage + 1));
+    });
+    pageInputs.forEach(input => {
+        input.addEventListener('change', handlePageInputChange);
+    });
     closeModal.addEventListener('click', () => rawLogModal.style.display = 'none');
     timeRangeSelect.addEventListener('change', handleTimeRangeChange);
-    pageSizeSelect.addEventListener('change', handlePageSizeChange);
+    pageSizeSelects.forEach(select => {
+        select.addEventListener('change', handlePageSizeChange);
+    });
+
     window.addEventListener('click', (event) => {
         if (event.target === rawLogModal) {
             rawLogModal.style.display = 'none';
@@ -38,7 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Functions
     function handlePageSizeChange() {
-        pageSize = parseInt(pageSizeSelect.value);
+        pageSize = parseInt(this.value);
+        // Sync all page size selects
+        pageSizeSelects.forEach(select => {
+            if (select !== this) {
+                select.value = pageSize;
+            }
+        });
         currentPage = 0; // Reset to first page when changing page size
         performSearch();
     }
@@ -157,7 +172,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function displayResults(data) {
         logsTableBody.innerHTML = '';
-        totalHitsElement.textContent = `${data.totalHits} results found`;
+        totalHitsElements.forEach(element => {
+            element.textContent = `${data.totalHits} results found`;
+        });
         
         totalPages = Math.ceil(data.totalHits / pageSize);
         updatePagination();
@@ -205,11 +222,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updatePagination() {
-        currentPageElement.textContent = `Page ${currentPage + 1}`;
-        pageInput.value = currentPage + 1;
-        totalPagesElement.textContent = totalPages;
-        prevPageButton.disabled = currentPage === 0;
-        nextPageButton.disabled = currentPage >= totalPages - 1;
+        currentPageElements.forEach(element => {
+            element.textContent = `Page ${currentPage + 1}`;
+        });
+        pageInputs.forEach(input => {
+            input.value = currentPage + 1;
+        });
+        totalPagesElements.forEach(element => {
+            element.textContent = totalPages;
+        });
+        prevPageButtons.forEach(button => {
+            button.disabled = currentPage === 0;
+        });
+        nextPageButtons.forEach(button => {
+            button.disabled = currentPage >= totalPages - 1;
+        });
     }
 
     function changePage(newPage) {
@@ -225,12 +252,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handlePageInputChange() {
-        const newPage = parseInt(pageInput.value) - 1; // Convert to 0-based index
+        const newPage = parseInt(this.value) - 1; // Convert to 0-based index
         if (newPage >= 0 && newPage < totalPages) {
             changePage(newPage);
         } else {
             // Reset to current page if invalid
-            pageInput.value = currentPage + 1;
+            pageInputs.forEach(input => {
+                input.value = currentPage + 1;
+            });
         }
     }
 

@@ -111,6 +111,36 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Bottom Results Info (same as top) -->
+            <div class="results-info">
+                <span id="totalHits">0 results found</span>
+                <div class="pagination-controls">
+                    <div class="pagination">
+                        <button id="prevPage" class="pagination-button" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span id="currentPage">Page 1</span>
+                        <div class="page-input">
+                            <input type="number" id="pageInput" min="1" value="1">
+                            <span>of <span id="totalPages">1</span></span>
+                        </div>
+                        <button id="nextPage" class="pagination-button" disabled>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="page-size-selector">
+                        <label for="pageSize">Results per page:</label>
+                        <select id="pageSize">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
