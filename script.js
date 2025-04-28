@@ -17,9 +17,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const endDateInput = document.getElementById('endDate');
     const pageSizeSelects = document.querySelectorAll('#pageSize');
     const bottomResultsInfo = document.getElementById('bottomResultsInfo');
+    const indexInput = document.getElementById('index');
 
     // Ensure bottom results info is hidden on page load
     bottomResultsInfo.classList.add('hidden');
+
+    // Clear error state when user types in index field
+    indexInput.addEventListener('input', () => {
+        if (indexInput.value.trim()) {
+            indexInput.classList.remove('error');
+            indexInput.placeholder = 'Enter index name';
+        }
+    });
 
     // State
     let currentPage = 0;
@@ -126,19 +135,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const indexError = document.getElementById('indexError');
 
         if (!index) {
-            indexInput.classList.add('error');
-            indexError.classList.add('show');
+            // Force reflow to restart animation
+            indexInput.style.animation = 'none';
+            indexInput.offsetHeight; // Trigger reflow
+            indexInput.style.animation = null;
             
-            // Remove error class after animation completes
-            setTimeout(() => {
-                indexInput.classList.remove('error');
-            }, 500);
+            indexInput.classList.add('error');
+            indexInput.placeholder = 'Index cannot be empty';
             return;
         }
 
         // Clear error state if index is valid
         indexInput.classList.remove('error');
-        indexError.classList.remove('show');
+        indexInput.placeholder = 'Enter index name';
 
         const params = new URLSearchParams();
         params.append('index', index);

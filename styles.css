@@ -398,16 +398,14 @@ em {
 
 #index.error {
     border-color: #dc2626 !important;
-    animation: shake 0.5s ease-in-out;
+    animation: shake 0.3s ease-in-out;
+}
+
+#index.error::placeholder {
+    color: #dc2626;
+    opacity: 1;
 }
 
 #indexError {
-    color: #dc2626;
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
     display: none;
-}
-
-#indexError.show {
-    display: block;
 }
