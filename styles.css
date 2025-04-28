@@ -102,6 +102,15 @@ input, select {
     margin-bottom: 1rem;
 }
 
+/* Right align the bottom results info */
+#bottomResultsInfo {
+    justify-content: flex-end;
+}
+
+#bottomResultsInfo .pagination-controls {
+    margin-left: auto;
+}
+
 .pagination-controls {
     display: flex;
     align-items: center;
@@ -374,4 +383,8 @@ em {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-} 
+}
+
+.hidden {
+    display: none;
+}

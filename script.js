@@ -16,6 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const startDateInput = document.getElementById('startDate');
     const endDateInput = document.getElementById('endDate');
     const pageSizeSelects = document.querySelectorAll('#pageSize');
+    const bottomResultsInfo = document.getElementById('bottomResultsInfo');
+
+    // Ensure bottom results info is hidden on page load
+    bottomResultsInfo.classList.add('hidden');
 
     // State
     let currentPage = 0;
@@ -178,6 +182,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
         totalPages = Math.ceil(data.totalHits / pageSize);
         updatePagination();
+
+        // Show/hide bottom results info based on whether there are records
+        const bottomResultsInfo = document.getElementById('bottomResultsInfo');
+        if (data.totalHits > 0) {
+            bottomResultsInfo.classList.remove('hidden');
+        } else {
+            bottomResultsInfo.classList.add('hidden');
+        }
 
         data.logs.forEach(log => {
             const row = document.createElement('tr');
