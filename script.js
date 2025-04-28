@@ -234,6 +234,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const hostCell = document.createElement('td');
             hostCell.innerHTML = log.hostName || log.hostIp || '-';
+
+            const exceptionCell = document.createElement('td');
+            exceptionCell.innerHTML = log.exception || '-';
             
             const actionsCell = document.createElement('td');
             const viewRawButton = document.createElement('button');
@@ -248,6 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
             row.appendChild(serviceCell);
             row.appendChild(messageCell);
             row.appendChild(hostCell);
+            row.appendChild(exceptionCell);
             row.appendChild(actionsCell);
 
             // Append row to table
