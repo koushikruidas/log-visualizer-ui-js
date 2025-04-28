@@ -33,7 +33,11 @@ Follow these steps to deploy and run the project on an HTTP server:
    ```bash
    http-server
    ```
-5. Open your browser and navigate to the URL provided by the `http-server` output (e.g., `http://127.0.0.1:8080`).
+5. Start the HTTP server in different port:
+   ```bash
+   http-server -p 3000
+   ```
+6. Open your browser and navigate to the URL provided by the `http-server` output (e.g., `http://127.0.0.1:8080`).
 
 #### Using Python's Built-in HTTP Server
 
