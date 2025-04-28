@@ -133,6 +133,25 @@ input, select {
     gap: 1rem;
 }
 
+.page-input {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.page-input input {
+    width: 60px;
+    padding: 0.25rem;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+.page-input span {
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
 .pagination-button {
     background: none;
     border: 1px solid var(--border-color);

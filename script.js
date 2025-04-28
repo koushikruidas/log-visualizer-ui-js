@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentPageElement = document.getElementById('currentPage');
     const prevPageButton = document.getElementById('prevPage');
     const nextPageButton = document.getElementById('nextPage');
+    const pageInput = document.getElementById('pageInput');
+    const totalPagesElement = document.getElementById('totalPages');
     const rawLogModal = document.getElementById('rawLogModal');
     const rawLogContent = document.getElementById('rawLogContent');
     const closeModal = document.querySelector('.close');
@@ -24,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     searchButton.addEventListener('click', performSearch);
     prevPageButton.addEventListener('click', () => changePage(currentPage - 1));
     nextPageButton.addEventListener('click', () => changePage(currentPage + 1));
+    pageInput.addEventListener('change', handlePageInputChange);
     closeModal.addEventListener('click', () => rawLogModal.style.display = 'none');
     timeRangeSelect.addEventListener('change', handleTimeRangeChange);
     pageSizeSelect.addEventListener('change', handlePageSizeChange);
@@ -81,6 +84,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function hideLoading() {
         document.getElementById('loadingOverlay').style.display = 'none';
+    }
+
+    function getTimeRangeInMilliseconds(range) {
+        switch (range) {
+            case '15m':
+                return 15 * 60 * 1000;
+            case '1h':
+                return 60 * 60 * 1000;
+            case '4h':
+                return 4 * 60 * 60 * 1000;
+            case '24h':
+                return 24 * 60 * 60 * 1000;
+            default:
+                return 15 * 60 * 1000; // Default to 15 minutes
+        }
     }
 
     async function performSearch() {
@@ -188,6 +206,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updatePagination() {
         currentPageElement.textContent = `Page ${currentPage + 1}`;
+        pageInput.value = currentPage + 1;
+        totalPagesElement.textContent = totalPages;
         prevPageButton.disabled = currentPage === 0;
         nextPageButton.disabled = currentPage >= totalPages - 1;
     }
@@ -202,6 +222,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function showRawLog(rawLog) {
         rawLogContent.textContent = rawLog;
         rawLogModal.style.display = 'block';
+    }
+
+    function handlePageInputChange() {
+        const newPage = parseInt(pageInput.value) - 1; // Convert to 0-based index
+        if (newPage >= 0 && newPage < totalPages) {
+            changePage(newPage);
+        } else {
+            // Reset to current page if invalid
+            pageInput.value = currentPage + 1;
+        }
     }
 
     // Initialize with default time range (15 minutes)
