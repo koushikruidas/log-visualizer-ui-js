@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integration Guide - Logpulse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --primary-light: rgba(76, 175, 80, 0.1);
+            --text: #2c3e50;
+            --gradient-1: #4CAF50;
+            --gradient-2: #45a049;
+            --code-bg: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 120px auto 60px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.05);
+            padding: 48px 40px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            text-rendering: optimizeLegibility;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--text);
+            opacity: 0.9;
+        }
+        p {
+            margin-bottom: 1.2rem;
+            line-height: 1.8;
+            color: var(--text);
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        ul, ol {
+            margin: 1.5rem 0;
+            padding-left: 1.5rem;
+            line-height: 1.8;
+        }
+
+        li {
+            margin-bottom: 0.75rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        pre, code {
+            background: var(--code-bg);
+            border-radius: 12px;
+            padding: 1.25rem;
+            font-size: 0.9rem;
+            font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+            line-height: 1.6;
+            overflow-x: auto;
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            margin: 1.5rem 0;
+        }
+
+        pre:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        code {
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-size: 0.9em;
+            background: rgba(0,0,0,0.04);
+            color: var(--primary);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: var(--text);
+        }
+        .step {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            animation: fadeInUp 1s ease-out;
+            transition: transform 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+        }
+
+        .highlight {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 6px;
+            padding: 0.2em 0.5em;
+            font-weight: 500;
+        }
+
+        .hero-section {
+            position: relative;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .hero-bar {
+            height: 4px;
+            width: 60px;
+            background: linear-gradient(90deg, var(--gradient-1), var(--gradient-2));
+            margin-bottom: 2rem;
+            border-radius: 2px;
+            animation: gradientFlow 3s ease infinite;
+        }
+
+        .contact {
+            background: var(--primary-light);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .contact h3 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            color: var(--text);
+            opacity: 0.7;
+            font-size: 0.9rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 100px 20px 40px;
+                padding: 32px 24px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .hero-section {
+                margin-bottom: 2rem;
+                padding-bottom: 1.5rem;
+            }
+
+            .step {
+                margin-bottom: 2rem;
+                padding-bottom: 1.5rem;
+            }
+
+            pre {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="index.html" class="nav-logo">
+            <svg width="24" height="24" viewBox="0 0 100 100" fill="none">
+                <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="2"/>
+                <path d="M30 50h40" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            Logpulse
+        </a>
+        <div class="nav-links">
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <a href="how-to-use.html" class="nav-link">Integration Guide</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero-section">
+            <div class="hero-bar"></div>
+            <h1>Integration Guide for <span class="highlight">Logpulse</span></h1>
+            <p>Follow this guide to integrate Logpulse with your application and start visualizing your logs in real-time.</p>
+        </div>
+
+        <!-- Converted Markdown to readable HTML paragraphs and code blocks -->
+        <div class="step">
+            <h2>Prerequisites</h2>
+            <ul>
+                <li>Java 17 or later</li>
+                <li>Spring Boot application</li>
+                <li>Access to <a href="https://logpulse.io" target="_blank">logpulse.io</a></li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h2>1. Add the Log Analyzer Client Dependency</h2>
+            
+            <h3>Maven Configuration</h3>
+            <p>Add the following dependency to your <strong>pom.xml</strong>:</p>
+            <pre>&lt;dependency&gt;
+    &lt;groupId&gt;io.github.koushikruidas&lt;/groupId&gt;
+    &lt;artifactId&gt;log-analyzer-client&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+
+            <h3>Gradle Configuration</h3>
+            <p>Add the following to your <strong>build.gradle</strong>:</p>
+            <pre>dependencies {
+    implementation 'io.github.koushikruidas:log-analyzer-client:1.0.0'
+}</pre>
+
+            <div class="contact">
+                <h3>📌 Need Help?</h3>
+                <p>Having trouble with the integration? Our support team is here to help! Contact us at <strong>support@logpulse.io</strong></p>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>2. Configure Log4j2</h2>
+            <p>Create or update <strong>log4j2.xml</strong> in <strong>src/main/resources</strong> with properties for Kafka, TLS and the Logpulse admin URL. Example:</p>
+            <pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;Configuration status="info" name="spring-boot-kafka-log"&gt;
+  &lt;Properties&gt;
+    &lt;Property name="bootstrap.servers"&gt;${env:KAFKA_SERVERS}&lt;/Property&gt;
+    &lt;Property name="apiKey"&gt;${env:LOG_ANALYZER_TOKEN}&lt;/Property&gt;
+  &lt;/Properties&gt;
+  &lt;Appenders&gt;
+    &lt;Kafka name="Kafka" topic="${kafka.topic}"&gt;
+      &lt;PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/&gt;
+    &lt;/Kafka&gt;
+  &lt;/Appenders&gt;
+  &lt;Loggers&gt;
+    &lt;Root level="info"&gt;
+      &lt;AppenderRef ref="Kafka"/&gt;
+    &lt;/Root&gt;
+  &lt;/Loggers&gt;
+&lt;/Configuration&gt;</pre>
+        </div>
+
+        <div class="step">
+            <h2>3. Enable Component Scanning for the Log Analyzer Client</h2>
+            <p>In your main application class, add <code>@ComponentScan</code>:</p>
+            <pre>import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+
+@SpringBootApplication
+@ComponentScan(basePackages = {"com.poinciana.loganalyzerClient"})
+public class GenerateLogsApplication {
+  public static void main(String[] args) {
+    SpringApplication.run(GenerateLogsApplication.class, args);
+  }
+}</pre>
+        </div>
+
+        <div class="step">
+            <h2>4. Get Kafka and Logpulse Credentials</h2>
+            <div class="contact">
+                To obtain Kafka details (topic name, hosts, certificates, username, password, and token), please contact: <b>koushikruidas@gmail.com</b>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>5. Run Your Application</h2>
+            <p>Build and run your application as usual. Your logs will be sent to logpulse.io via the configured Kafka appender.</p>
+        </div>
+
+        <div class="step">
+            <h2>6. Troubleshooting</h2>
+            <ul>
+                <li>Ensure all dependencies are downloaded and the repository is accessible.</li>
+                <li>Double-check your Kafka and topic configuration in <strong>log4j2.xml</strong>.</li>
+                <li>Review <a href="https://logpulse.io" target="_blank">logpulse.io documentation</a> for additional setup or troubleshooting steps.</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 Logpulse. All rights reserved.</p>
+            <p>For more information, visit <a href="https://logpulse.io" class="link" target="_blank">logpulse.io</a> or contact your system administrator.</p>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.style.opacity = '1';
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        // Observe all step elements
+        document.querySelectorAll('.step').forEach(step => {
+            observer.observe(step);
+        });
+
+        // Code block copy functionality
+        document.querySelectorAll('pre').forEach(block => {
+            block.style.position = 'relative';
+            const button = document.createElement('button');
+            button.style.position = 'absolute';
+            button.style.right = '10px';
+            button.style.top = '10px';
+            button.style.padding = '4px 8px';
+            button.style.background = 'rgba(255,255,255,0.1)';
+            button.style.border = 'none';
+            button.style.borderRadius = '4px';
+            button.style.color = 'inherit';
+            button.style.cursor = 'pointer';
+            button.textContent = 'Copy';
+            
+            button.addEventListener('click', () => {
+                navigator.clipboard.writeText(block.textContent);
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                }, 2000);
+            });
+            
+            block.appendChild(button);
+        });
+    </script>
+</body>
+</html>

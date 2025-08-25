@@ -182,7 +182,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         showLoading();
         try {
-            const response = await fetch(`http://localhost:9231/search/search-with-highlight?${params}`);
+            const API_BASE_URL = window.APP_CONFIG?.API_BASE_URL || 'http://localhost:8080';
+            const response = await fetch(`${API_BASE_URL}/search/search-with-highlight?${params}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }

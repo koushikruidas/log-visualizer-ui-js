@@ -1,0 +1,14 @@
+services:
+  logPulse-ui:
+    build: .
+    container_name: logPulse-ui
+    environment:
+      - API_BASE_URL=http://log-visualizer:8080
+    ports:
+      - "80:80"
+    networks:
+      - dockercompose_default
+
+networks:
+  dockercompose_default:
+    driver: bridge

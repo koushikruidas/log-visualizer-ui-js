@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Visualizer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Log Visualizer</h1>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link active">Dashboard</a>
+                <a href="how-to-use.html" class="nav-link">Integration Guide</a>
+            </nav>
+            <div class="search-container">
+                <div class="search-filters">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="index">Index:</label>
+                            <input type="text" id="index" required placeholder="Enter index name">
+                            <div id="indexError"></div>
+                        </div>
+                        <div class="filter-group">
+                            <label for="level">Level:</label>
+                            <select id="level">
+                                <option value="">All</option>
+                                <option value="INFO">INFO</option>
+                                <option value="ERROR">ERROR</option>
+                                <option value="WARN">WARN</option>
+                                <option value="DEBUG">DEBUG</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="serviceName">Service:</label>
+                            <input type="text" id="serviceName">
+                        </div>
+                        <div class="filter-group">
+                            <label for="keyword">Keyword:</label>
+                            <input type="text" id="keyword">
+                        </div>
+                        <div class="filter-group">
+                            <label for="timeRange">Time Range:</label>
+                            <select id="timeRange">
+                                <option value="15m">Last 15 minutes</option>
+                                <option value="1h">Last 1 hour</option>
+                                <option value="4h">Last 4 hours</option>
+                                <option value="24h">Last 24 hours</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="customDateRange" class="custom-date-range" style="display: none;">
+                        <div class="filter-group">
+                            <label for="startDate">Start Date:</label>
+                            <input type="datetime-local" id="startDate">
+                        </div>
+                        <div class="filter-group">
+                            <label for="endDate">End Date:</label>
+                            <input type="datetime-local" id="endDate">
+                        </div>
+                    </div>
+                </div>
+                <button id="searchButton" class="search-button">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <div class="results-info">
+                <span id="totalHits">0 results found</span>
+                <div class="pagination-controls">
+                    <div class="pagination">
+                        <button id="prevPage" class="pagination-button" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span id="currentPage">Page 1</span>
+                        <div class="page-input">
+                            <input type="number" id="pageInput" min="1" value="1">
+                            <span>of <span id="totalPages">1</span></span>
+                        </div>
+                        <button id="nextPage" class="pagination-button" disabled>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="page-size-selector">
+                        <label for="pageSize">Results per page:</label>
+                        <select id="pageSize">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table id="logsTable">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Level</th>
+                            <th>Service</th>
+                            <th>Message</th>
+                            <th>Host</th>
+                            <th>Exception</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logsTableBody">
+                        <!-- Log entries will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Bottom Results Info -->
+            <div class="results-info hidden" id="bottomResultsInfo">
+                <div class="pagination-controls">
+                    <div class="pagination">
+                        <button id="prevPage" class="pagination-button" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span id="currentPage">Page 1</span>
+                        <div class="page-input">
+                            <input type="number" id="pageInput" min="1" value="1">
+                            <span>of <span id="totalPages">1</span></span>
+                        </div>
+                        <button id="nextPage" class="pagination-button" disabled>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="page-size-selector">
+                        <label for="pageSize">Results per page:</label>
+                        <select id="pageSize">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading...</div>
+    </div>
+
+    <!-- Modal for raw log display -->
+    <div id="rawLogModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Raw Log</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <pre id="rawLogContent"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

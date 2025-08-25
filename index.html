@@ -3,167 +3,535 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log Visualizer</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Logpulse - Visualize Your Application Logs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --primary-light: rgba(76, 175, 80, 0.1);
+            --text: #2c3e50;
+            --gradient-1: #4CAF50;
+            --gradient-2: #45a049;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background: #ffffff;
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
+            overflow: hidden;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(76, 175, 80, 0.1) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease-out forwards;
+        }
+
+        .logo {
+            margin-bottom: 2rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .logo svg {
+            width: 80px;
+            height: 80px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: fadeInUp 1s ease-out 0.2s backwards;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: #666;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 1s ease-out 0.4s backwards;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            animation: fadeInUp 1s ease-out 0.6s backwards;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+            animation: fadeInUp 1s ease-out 0.8s backwards;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            .actions {
+                flex-direction: column;
+            }
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        .buttons {
+            margin-top: 30px;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 0 10px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            margin-bottom: 2rem;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .logo svg {
+            width: 80px;
+            height: 80px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: fadeInUp 1s ease-out 0.2s backwards;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: #666;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 1s ease-out 0.4s backwards;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            animation: fadeInUp 1s ease-out 0.6s backwards;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .btn-primary:hover,
+        .btn-secondary:hover {
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+            animation: fadeInUp 1s ease-out 0.8s backwards;
+        }
+
+        .feature {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .floating-shapes div {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .shape1 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.05));
+            top: -50px;
+            left: -100px;
+            animation: float1 20s linear infinite;
+        }
+
+        .shape2 {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(225deg, rgba(76, 175, 80, 0.08), rgba(76, 175, 80, 0.03));
+            bottom: -50px;
+            right: -50px;
+            animation: float2 15s linear infinite;
+        }
+
+        @keyframes float1 {
+            0% { transform: rotate(0deg) translate(0, 0); }
+            50% { transform: rotate(180deg) translate(50px, 50px); }
+            100% { transform: rotate(360deg) translate(0, 0); }
+        }
+
+        @keyframes float2 {
+            0% { transform: rotate(0deg) translate(0, 0); }
+            50% { transform: rotate(-180deg) translate(-30px, 30px); }
+            100% { transform: rotate(-360deg) translate(0, 0); }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Glass morphism effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            .actions {
+                flex-direction: column;
+            }
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Log Visualizer</h1>
-            <div class="search-container">
-                <div class="search-filters">
-                    <div class="filter-row">
-                        <div class="filter-group">
-                            <label for="index">Index:</label>
-                            <input type="text" id="index" required placeholder="Enter index name">
-                            <div id="indexError"></div>
-                        </div>
-                        <div class="filter-group">
-                            <label for="level">Level:</label>
-                            <select id="level">
-                                <option value="">All</option>
-                                <option value="INFO">INFO</option>
-                                <option value="ERROR">ERROR</option>
-                                <option value="WARN">WARN</option>
-                                <option value="DEBUG">DEBUG</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label for="serviceName">Service:</label>
-                            <input type="text" id="serviceName">
-                        </div>
-                        <div class="filter-group">
-                            <label for="keyword">Keyword:</label>
-                            <input type="text" id="keyword">
-                        </div>
-                        <div class="filter-group">
-                            <label for="timeRange">Time Range:</label>
-                            <select id="timeRange">
-                                <option value="15m">Last 15 minutes</option>
-                                <option value="1h">Last 1 hour</option>
-                                <option value="4h">Last 4 hours</option>
-                                <option value="24h">Last 24 hours</option>
-                                <option value="custom">Custom Range</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="customDateRange" class="custom-date-range" style="display: none;">
-                        <div class="filter-group">
-                            <label for="startDate">Start Date:</label>
-                            <input type="datetime-local" id="startDate">
-                        </div>
-                        <div class="filter-group">
-                            <label for="endDate">End Date:</label>
-                            <input type="datetime-local" id="endDate">
-                        </div>
-                    </div>
+    <main class="hero">
+        <div class="content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" stroke="url(#gradient)" stroke-width="2"/>
+                    <path d="M30 50h40" stroke="url(#gradient)" stroke-width="2" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100">
+                        <animate 
+                            attributeName="stroke-dashoffset" 
+                            from="100" 
+                            to="0"
+                            dur="2s"
+                            fill="freeze"
+                            begin="0s;reset.end"/>
+                        <animate 
+                            id="wave"
+                            attributeName="d" 
+                            dur="3s"
+                            values="M30 50h40; M30 50c20-20 20 20 40 0; M30 50h40"
+                            calcMode="spline"
+                            keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"
+                            begin="0s;reset.end"/>
+                        <animate
+                            id="reset"
+                            attributeName="stroke-dashoffset"
+                            to="100"
+                            dur="0.01s"
+                            begin="wave.end"
+                            fill="freeze"/>
+                    </path>
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color: var(--gradient-1)">
+                                <animate attributeName="stop-color"
+                                    dur="3s"
+                                    repeatCount="indefinite"
+                                    values="var(--gradient-1); var(--gradient-2); var(--gradient-1)"/>
+                            </stop>
+                            <stop offset="100%" style="stop-color: var(--gradient-2)">
+                                <animate attributeName="stop-color"
+                                    dur="3s"
+                                    repeatCount="indefinite"
+                                    values="var(--gradient-2); var(--gradient-1); var(--gradient-2)"/>
+                            </stop>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <h1>Visualize Your Application Logs</h1>
+            <p class="subtitle">A powerful, intuitive interface for exploring and analyzing your application logs in real-time. Built for developers who need clear insights.</p>
+            
+            <div class="actions">
+                <a href="dashboard.html" class="btn btn-primary">Open Dashboard</a>
+                <a href="how-to-use.html" class="btn btn-secondary">Integration Guide</a>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <h3>Real-time Monitoring</h3>
+                    <p>Watch your application logs flow in real-time with automatic updates and intelligent filtering.</p>
                 </div>
-                <button id="searchButton" class="search-button">
-                    <i class="fas fa-search"></i> Search
-                </button>
-            </div>
-        </header>
-
-        <main>
-            <div class="results-info">
-                <span id="totalHits">0 results found</span>
-                <div class="pagination-controls">
-                    <div class="pagination">
-                        <button id="prevPage" class="pagination-button" disabled>
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <span id="currentPage">Page 1</span>
-                        <div class="page-input">
-                            <input type="number" id="pageInput" min="1" value="1">
-                            <span>of <span id="totalPages">1</span></span>
-                        </div>
-                        <button id="nextPage" class="pagination-button" disabled>
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                    <div class="page-size-selector">
-                        <label for="pageSize">Results per page:</label>
-                        <select id="pageSize">
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="30">30</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
-                    </div>
+                <div class="feature">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Advanced Search</h3>
+                    <p>Powerful search capabilities with support for complex queries and highlighted results.</p>
                 </div>
-            </div>
-
-            <div class="table-container">
-                <table id="logsTable">
-                    <thead>
-                        <tr>
-                            <th>Timestamp</th>
-                            <th>Level</th>
-                            <th>Service</th>
-                            <th>Message</th>
-                            <th>Host</th>
-                            <th>Exception</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="logsTableBody">
-                        <!-- Log entries will be inserted here -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Bottom Results Info -->
-            <div class="results-info hidden" id="bottomResultsInfo">
-                <div class="pagination-controls">
-                    <div class="pagination">
-                        <button id="prevPage" class="pagination-button" disabled>
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <span id="currentPage">Page 1</span>
-                        <div class="page-input">
-                            <input type="number" id="pageInput" min="1" value="1">
-                            <span>of <span id="totalPages">1</span></span>
-                        </div>
-                        <button id="nextPage" class="pagination-button" disabled>
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                    <div class="page-size-selector">
-                        <label for="pageSize">Results per page:</label>
-                        <select id="pageSize">
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="30">30</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
-                    </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Easy Integration</h3>
+                    <p>Simple setup process with comprehensive documentation and support.</p>
                 </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Loading Spinner -->
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="spinner"></div>
-        <div class="loading-text">Loading...</div>
-    </div>
-
-    <!-- Modal for raw log display -->
-    <div id="rawLogModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Raw Log</h2>
-                <span class="close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <pre id="rawLogContent"></pre>
             </div>
         </div>
-    </div>
+    </main>
 
-    <script src="script.js"></script>
+    <script>
+        // Add smooth scroll behavior for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 </body>
-</html> 
+</html>
