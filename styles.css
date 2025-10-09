@@ -89,6 +89,17 @@ input, select {
     font-size: 0.95rem;
     background: white;
     transition: all 0.3s ease;
+    width: 100%;
+    display: block;
+    min-height: 44px; /* ensure consistent control height */
+}
+
+/* Normalize native select rendering so it matches input height */
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    line-height: 1.2;
 }
 
 input:focus, select:focus {
@@ -712,4 +723,134 @@ header {
 
 #indexError {
     display: none;
+}
+
+/* How-to-use page specific styles */
+h2 {
+    font-size: 1.5rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: var(--primary);
+    animation: fadeInUp 1s ease-out;
+}
+
+h3 {
+    font-size: 1.2rem;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    color: var(--text);
+    opacity: 0.9;
+}
+
+p {
+    margin-bottom: 1.2rem;
+    line-height: 1.8;
+    color: var(--text);
+    opacity: 0.9;
+    animation: fadeInUp 1s ease-out;
+}
+
+ul, ol {
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+    line-height: 1.8;
+}
+
+li {
+    margin-bottom: 0.75rem;
+    animation: fadeInUp 1s ease-out;
+}
+
+.step {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+    animation: fadeInUp 1s ease-out;
+    transition: transform 0.3s ease;
+}
+
+.step:hover {
+    transform: translateY(-5px);
+}
+
+.highlight {
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: 6px;
+    padding: 0.2em 0.5em;
+    font-weight: 500;
+}
+
+.hero-section {
+    position: relative;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.hero-bar {
+    height: 4px;
+    width: 60px;
+    background: linear-gradient(90deg, var(--gradient-1), var(--gradient-2));
+    margin-bottom: 2rem;
+    border-radius: 2px;
+    animation: gradientFlow 3s ease infinite;
+}
+
+.contact {
+    background: var(--primary-light);
+    border-radius: 16px;
+    padding: 2rem;
+    margin: 2rem 0;
+    animation: fadeInUp 1s ease-out;
+}
+
+.contact h3 {
+    color: var(--primary);
+    margin-top: 0;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    color: var(--text);
+    opacity: 0.7;
+    font-size: 0.9rem;
+    animation: fadeInUp 1s ease-out;
+}
+
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Responsive styles for how-to-use page */
+@media (max-width: 768px) {
+    .container {
+        margin: 100px 20px 40px;
+        padding: 32px 24px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .hero-section {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .step {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+    }
+
+    pre {
+        padding: 1rem;
+    }
 }
