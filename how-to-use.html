@@ -12,7 +12,14 @@
             --text: #2c3e50;
             --gradient-1: #4CAF50;
             --gradient-2: #45a049;
+            --background: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --border: rgba(76, 175, 80, 0.2);
             --code-bg: #f8fafc;
+            --error-color: #dc2626;
+            --warning-color: #d97706;
+            --info-color: #4CAF50;
+            --debug-color: #4b5563;
         }
 
         * {
@@ -74,10 +81,10 @@
         .container {
             max-width: 900px;
             margin: 120px auto 60px;
-            background: rgba(255, 255, 255, 0.7);
+            background: var(--card-bg);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--border);
             border-radius: 24px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.05);
             padding: 48px 40px;
@@ -134,14 +141,14 @@
         }
 
         pre, code {
-            background: var(--code-bg);
+            background: var(--primary-light);
             border-radius: 12px;
             padding: 1.25rem;
             font-size: 0.9rem;
             font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
             line-height: 1.6;
             overflow-x: auto;
-            border: 1px solid rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
             transition: all 0.3s ease;
             margin: 1.5rem 0;
         }
@@ -155,7 +162,7 @@
             padding: 0.2em 0.4em;
             border-radius: 4px;
             font-size: 0.9em;
-            background: rgba(0,0,0,0.04);
+            background: var(--primary-light);
             color: var(--primary);
         }
 
@@ -167,7 +174,7 @@
         .step {
             margin-bottom: 3rem;
             padding-bottom: 2rem;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            border-bottom: 1px solid var(--border);
             animation: fadeInUp 1s ease-out;
             transition: transform 0.3s ease;
         }
@@ -188,7 +195,7 @@
             position: relative;
             margin-bottom: 3rem;
             padding-bottom: 2rem;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            border-bottom: 1px solid var(--border);
         }
 
         .hero-bar {
@@ -217,7 +224,7 @@
             text-align: center;
             margin-top: 4rem;
             padding-top: 2rem;
-            border-top: 1px solid rgba(0,0,0,0.05);
+            border-top: 1px solid var(--border);
             color: var(--text);
             opacity: 0.7;
             font-size: 0.9rem;
