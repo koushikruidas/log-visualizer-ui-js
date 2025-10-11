@@ -575,10 +575,7 @@ em {
 .feature-icon {
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    /* Keep original emoji colors - no color overrides */
 }
 
 @keyframes float {
