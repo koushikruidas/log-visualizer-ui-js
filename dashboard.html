@@ -222,15 +222,16 @@
             }
         }
     </style>
-    <script src="script.js" defer></script>
+    
 </head>
 <body>
-    <div class="container">
+    <div class="container" style="display:none">
         <header>
             <h1>Log Visualizer</h1>
             <nav class="main-nav">
                 <a href="index.html" class="nav-link">Home</a>
                 <a href="dashboard.html" class="nav-link active">Dashboard</a>
+                <button id="logoutBtn" class="nav-link" style="border:none;background:transparent;cursor:pointer;">Logout</button>
             </nav>
             <div class="search-container">
                 <div class="search-filters">
@@ -386,6 +387,26 @@
     </div>
 
     <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Initialize authentication on dashboard load
+        if (window.Auth && typeof window.Auth.init === 'function') {
+            // Gate UI until auth completes
+            var container = document.querySelector('.container');
+            Promise.resolve(window.Auth.init())
+                .then(function(){ if (container) container.style.display = ''; })
+                .catch(function(){ /* Auth.init triggers redirect on failure */ });
+        }
+        // Wire logout button
+        (function(){
+            var btn = document.getElementById('logoutBtn');
+            if (btn && window.Auth && typeof window.Auth.logout === 'function') {
+                btn.addEventListener('click', function(){
+                    window.Auth.logout();
+                });
+            }
+        })();
+    </script>
     <script src="script.js"></script>
 </body>
 </html>

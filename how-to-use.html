@@ -275,6 +275,7 @@
         <div class="nav-links">
             <a href="dashboard.html" class="nav-link">Dashboard</a>
             <a href="how-to-use.html" class="nav-link">Integration Guide</a>
+            <button id="logoutBtn" class="nav-link" style="border:none;background:transparent;cursor:pointer;">Logout</button>
         </div>
     </nav>
 
@@ -383,7 +384,22 @@ public class GenerateLogsApplication {
         </div>
     </div>
 
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
     <script>
+        // initialize auth so logout works here too (no redirect if already authenticated)
+        if (window.Auth && typeof window.Auth.init === 'function') {
+            window.Auth.init();
+        }
+        // wire logout
+        (function(){
+            var btn = document.getElementById('logoutBtn');
+            if (btn && window.Auth && typeof window.Auth.logout === 'function') {
+                btn.addEventListener('click', function(){
+                    window.Auth.logout();
+                });
+            }
+        })();
         // Smooth scroll behavior
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {

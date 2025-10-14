@@ -183,8 +183,26 @@ document.addEventListener('DOMContentLoaded', () => {
         showLoading();
         try {
             const API_BASE_URL = window.APP_CONFIG?.API_BASE_URL || 'http://localhost:8080';
-            const response = await fetch(`${API_BASE_URL}/search/search-with-highlight?${params}`);
+            const headers = {};
+            if (window.Auth && typeof window.Auth.getAuthHeader === 'function') {
+                const authHeader = await window.Auth.getAuthHeader();
+                if (authHeader) headers['Authorization'] = authHeader;
+            }
+            const response = await fetch(`${API_BASE_URL}/search/search-with-highlight?${params}`, { headers });
             if (!response.ok) {
+                if (response.status === 401 || response.status === 403) {
+                    if (window.Auth && typeof window.Auth.login === 'function') {
+                        // attempt a silent refresh first
+                        if (typeof window.Auth.getAccessToken === 'function') {
+                            try {
+                                await window.Auth.getAccessToken();
+                            } catch (e) {}
+                        }
+                        // then force re-login
+                        window.Auth.login();
+                        return;
+                    }
+                }
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
