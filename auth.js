@@ -138,6 +138,7 @@
     }
 
     function buildAuthorizeUrl(codeChallenge, state) {
+        console.log(cfg.authEndpoint);
         const authUrl = resolveEndpoint(cfg.authEndpoint);
         const url = new URL(authUrl);
         url.searchParams.set('client_id', cfg.clientId);

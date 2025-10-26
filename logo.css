@@ -1,0 +1,89 @@
+/* LogPulse Animated Logo Styles */
+
+:root {
+    --primary: #4CAF50;
+    --primary-light: rgba(76, 175, 80, 0.1);
+    --gradient-1: #4CAF50;
+    --gradient-2: #45a049;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.animated-logo {
+    width: 60px;
+    height: 60px;
+    animation: float 6s ease-in-out infinite;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.animated-logo:hover {
+    transform: scale(1.1);
+}
+
+/* Float animation */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Size variations */
+.logo-small {
+    width: 30px;
+    height: 30px;
+}
+
+.logo-medium {
+    width: 60px;
+    height: 60px;
+}
+
+.logo-large {
+    width: 120px;
+    height: 120px;
+}
+
+.logo-xl {
+    width: 180px;
+    height: 180px;
+}
+
+/* Color variations */
+.logo-white circle,
+.logo-white path {
+    stroke: white;
+}
+
+.logo-dark circle,
+.logo-dark path {
+    stroke: #2c3e50;
+}
+
+.logo-blue circle,
+.logo-blue path {
+    stroke: #2196F3;
+}
+
+/* Animation control classes */
+.logo-no-float {
+    animation: none;
+}
+
+.logo-no-animation circle,
+.logo-no-animation path {
+    animation: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .animated-logo {
+        width: 50px;
+        height: 50px;
+    }
+}
