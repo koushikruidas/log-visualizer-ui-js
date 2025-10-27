@@ -195,17 +195,24 @@
     }
 
     async function ensureAuthenticated() {
-        const handled = await handleRedirectCallback();
-        if (handled) return; // tokens are set
-        const tokenSet = getTokenSet();
-        if (!tokenSet) {
+        try {
+            const handled = await handleRedirectCallback();
+            if (handled) return true; // tokens are set
+            const tokenSet = getTokenSet();
+            if (!tokenSet) {
+                await login();
+                return false; // redirected
+            }
+            if (isAccessTokenExpired()) {
+                await refreshAccessToken().catch(login);
+            } else {
+                scheduleRefresh();
+            }
+            return true; // authentication confirmed
+        } catch (e) {
+            console.error('Authentication failed:', e);
             await login();
-            return; // redirected
-        }
-        if (isAccessTokenExpired()) {
-            await refreshAccessToken().catch(login);
-        } else {
-            scheduleRefresh();
+            return false;
         }
     }
 

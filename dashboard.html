@@ -390,21 +390,43 @@
     <script src="auth.js"></script>
     <script>
         // Initialize authentication on dashboard load
-        if (window.Auth && typeof window.Auth.init === 'function') {
-            // Gate UI until auth completes
+        (function() {
+            // Make sure container stays hidden by default
             var container = document.querySelector('.container');
-            Promise.resolve(window.Auth.init())
-                .then(function(){ if (container) container.style.display = ''; })
-                .catch(function(){ /* Auth.init triggers redirect on failure */ });
-        }
-        // Wire logout button
-        (function(){
-            var btn = document.getElementById('logoutBtn');
-            if (btn && window.Auth && typeof window.Auth.logout === 'function') {
-                btn.addEventListener('click', function(){
-                    window.Auth.logout();
+            if (container) container.style.display = 'none';
+            
+            function initAuth() {
+                if (!window.Auth || typeof window.Auth.init !== 'function') {
+                    console.error('Auth not initialized');
+                    return;
+                }
+
+                // Initialize authentication
+                window.Auth.init().then(function(authenticated) {
+                    if (authenticated && container) {
+                        container.style.display = '';
+                    }
+                }).catch(function(err) {
+                    console.error('Auth error:', err);
+                    // Auth.init will handle the redirect
                 });
             }
+
+            // Wire logout button
+            function initLogout() {
+                var btn = document.getElementById('logoutBtn');
+                if (btn && window.Auth && typeof window.Auth.logout === 'function') {
+                    btn.addEventListener('click', function(){
+                        // Hide container before logout
+                        if (container) container.style.display = 'none';
+                        window.Auth.logout();
+                    });
+                }
+            }
+
+            // Initialize both auth and logout
+            initAuth();
+            initLogout();
         })();
     </script>
     <script src="script.js"></script>
