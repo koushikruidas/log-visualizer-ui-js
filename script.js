@@ -18,10 +18,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const pageSizeSelects = document.querySelectorAll('#pageSize');
     const bottomResultsInfo = document.getElementById('bottomResultsInfo');
     const indexInput = document.getElementById('index');
-
+    const timezoneSelect = document.getElementById('timezoneSelect');
+    
+    function populateTimezones() {
+        const timezones = Intl.supportedValuesOf('timeZone');
+        timezones.forEach(tz => {
+            const opt = document.createElement('option');
+            opt.value = tz;
+            opt.textContent = tz;
+            timezoneSelect.appendChild(opt);
+        });
+        timezoneSelect.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    }
+    
+    populateTimezones();
+    
     // Ensure bottom results info is hidden on page load
     bottomResultsInfo.classList.add('hidden');
-
+    
     // Clear error state when user types in index field
     indexInput.addEventListener('input', () => {
         if (indexInput.value.trim()) {
@@ -29,12 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
             indexInput.placeholder = 'Enter index name';
         }
     });
-
+    
     // State
     let currentPage = 0;
     let totalPages = 0;
     let pageSize = 10;
-
+    
     // Event Listeners
     searchButton.addEventListener('click', performSearch);
     prevPageButtons.forEach(button => {
@@ -48,16 +62,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     closeModal.addEventListener('click', () => rawLogModal.style.display = 'none');
     timeRangeSelect.addEventListener('change', handleTimeRangeChange);
+    
+    // Add timezone change listener
+    timezoneSelect.addEventListener('change', () => {
+        // Update the datetime inputs when timezone changes
+        if (timeRangeSelect.value !== 'custom') {
+            updateDateTimeInputs(timeRangeSelect.value);
+        }
+        // If results are displayed, refresh them with new timezone
+        if (document.querySelector('#logsTableBody tr')) {
+            performSearch();
+        }
+    });
+
     pageSizeSelects.forEach(select => {
         select.addEventListener('change', handlePageSizeChange);
     });
-
+    
     window.addEventListener('click', (event) => {
         if (event.target === rawLogModal) {
             rawLogModal.style.display = 'none';
         }
     });
-
+    
     // Functions
     function handlePageSizeChange() {
         pageSize = parseInt(this.value);
@@ -70,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPage = 0; // Reset to first page when changing page size
         performSearch();
     }
-
+    
     function handleTimeRangeChange() {
         const selectedRange = timeRangeSelect.value;
         if (selectedRange === 'custom') {
@@ -80,60 +107,86 @@ document.addEventListener('DOMContentLoaded', () => {
             updateDateTimeInputs(selectedRange);
         }
     }
-
+    
     function updateDateTimeInputs(range) {
+        // Get the selected timezone
+        const tz = timezoneSelect.value;
+        
+        // Create dates in the selected timezone
         const now = new Date();
         let startTime;
-
+        
         switch (range) {
             case '15m':
-                startTime = new Date(now.getTime() - 15 * 60 * 1000);
-                break;
+            startTime = new Date(now.getTime() - 15 * 60 * 1000);
+            break;
             case '1h':
-                startTime = new Date(now.getTime() - 60 * 60 * 1000);
-                break;
+            startTime = new Date(now.getTime() - 60 * 60 * 1000);
+            break;
             case '4h':
-                startTime = new Date(now.getTime() - 4 * 60 * 60 * 1000);
-                break;
+            startTime = new Date(now.getTime() - 4 * 60 * 60 * 1000);
+            break;
             case '24h':
-                startTime = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-                break;
+            startTime = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+            break;
             default:
-                startTime = new Date(now.getTime() - 15 * 60 * 1000); // Default to 15 minutes
+            startTime = new Date(now.getTime() - 15 * 60 * 1000); // Default to 15 minutes
         }
-
-        startDateInput.value = startTime.toISOString().slice(0, 16);
-        endDateInput.value = now.toISOString().slice(0, 16);
+        
+        // Format dates for the datetime-local input in the selected timezone
+        const formatter = new Intl.DateTimeFormat('en-CA', {
+            timeZone: tz,
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        });
+        
+        const startParts = formatter.formatToParts(startTime);
+        const endParts = formatter.formatToParts(now);
+        
+        function formatDateFromParts(parts) {
+            const dateObj = {};
+            parts.forEach(part => {
+                dateObj[part.type] = part.value;
+            });
+            return `${dateObj.year}-${dateObj.month}-${dateObj.day}T${dateObj.hour}:${dateObj.minute}`;
+        }
+        
+        startDateInput.value = formatDateFromParts(startParts);
+        endDateInput.value = formatDateFromParts(endParts);
     }
-
+    
     function showLoading() {
         document.getElementById('loadingOverlay').style.display = 'flex';
     }
-
+    
     function hideLoading() {
         document.getElementById('loadingOverlay').style.display = 'none';
     }
-
+    
     function getTimeRangeInMilliseconds(range) {
         switch (range) {
             case '15m':
-                return 15 * 60 * 1000;
+            return 15 * 60 * 1000;
             case '1h':
-                return 60 * 60 * 1000;
+            return 60 * 60 * 1000;
             case '4h':
-                return 4 * 60 * 60 * 1000;
+            return 4 * 60 * 60 * 1000;
             case '24h':
-                return 24 * 60 * 60 * 1000;
+            return 24 * 60 * 60 * 1000;
             default:
-                return 15 * 60 * 1000; // Default to 15 minutes
+            return 15 * 60 * 1000; // Default to 15 minutes
         }
     }
-
+    
     async function performSearch() {
         const index = document.getElementById('index').value;
         const indexInput = document.getElementById('index');
         const indexError = document.getElementById('indexError');
-
+        
         if (!index) {
             // Force reflow to restart animation
             indexInput.style.animation = 'none';
@@ -145,13 +198,29 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Validate date range if custom range is selected
+        if (timeRangeSelect.value === 'custom') {
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+            
+            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+                alert('Please enter valid date range');
+                return;
+            }
+            
+            if (startDate >= endDate) {
+                alert('Start date must be before end date');
+                return;
+            }
+        }
+        
         // Clear error state if index is valid
         indexInput.classList.remove('error');
         indexInput.placeholder = 'Enter index name';
-
+        
         const params = new URLSearchParams();
         params.append('index', index);
-
+        
         // Add optional parameters if they have values
         const level = document.getElementById('level').value;
         const serviceName = document.getElementById('serviceName').value;
@@ -159,27 +228,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const pageSize = document.getElementById('pageSize').value;
         const currentPage = parseInt(document.getElementById('currentPage').textContent.split(' ')[1]);
         const from = (currentPage - 1) * pageSize;
-
+        
         if (level) params.append('level', level);
         if (serviceName) params.append('serviceName', serviceName);
         if (keyword) params.append('keyword', keyword);
         if (from) params.append('from', from);
         if (pageSize) params.append('size', pageSize);
-
+        
         // Handle date range
         const timeRange = document.getElementById('timeRange').value;
         let startDate, endDate;
         if (timeRange === 'custom') {
-            startDate = document.getElementById('startDate').value;
-            endDate = document.getElementById('endDate').value;
+            const startInput = document.getElementById('startDate').value;
+            const endInput = document.getElementById('endDate').value;
+            
+            startDate = new Date(startInput).toISOString(); // Convert to UTC Instant
+            endDate = new Date(endInput).toISOString();
         } else {
             const now = new Date();
             endDate = now.toISOString();
             startDate = new Date(now.getTime() - getTimeRangeInMilliseconds(timeRange)).toISOString();
         }
+        
         params.append('startDate', startDate);
         params.append('endDate', endDate);
-
+        
         showLoading();
         try {
             const API_BASE_URL = window.APP_CONFIG?.API_BASE_URL || 'http://localhost:8080';
@@ -214,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
             hideLoading();
         }
     }
-
+    
     function displayResults(data) {
         logsTableBody.innerHTML = '';
         totalHitsElements.forEach(element => {
@@ -223,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         totalPages = Math.ceil(data.totalHits / pageSize);
         updatePagination();
-
+        
         // Show/hide bottom results info based on whether there are records
         const bottomResultsInfo = document.getElementById('bottomResultsInfo');
         if (data.totalHits > 0) {
@@ -231,13 +304,15 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             bottomResultsInfo.classList.add('hidden');
         }
-
+        
         data.logs.forEach(log => {
             const row = document.createElement('tr');
             
             // Create cells
             const timestampCell = document.createElement('td');
-            timestampCell.textContent = new Date(log.timestamp).toLocaleString();
+            const tz = timezoneSelect.value;
+            timestampCell.textContent = new Date(log.timestamp).toLocaleString("en-US", { timeZone: tz });
+            
             
             const levelCell = document.createElement('td');
             const levelBadge = document.createElement('span');
@@ -253,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const hostCell = document.createElement('td');
             hostCell.innerHTML = log.hostName || log.hostIp || '-';
-
+            
             const exceptionCell = document.createElement('td');
             exceptionCell.innerHTML = log.exception || '-';
             
@@ -263,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
             viewRawButton.textContent = 'View Raw';
             viewRawButton.addEventListener('click', () => showRawLog(log.rawLog));
             actionsCell.appendChild(viewRawButton);
-
+            
             // Append cells to row
             row.appendChild(timestampCell);
             row.appendChild(levelCell);
@@ -272,12 +347,12 @@ document.addEventListener('DOMContentLoaded', () => {
             row.appendChild(hostCell);
             row.appendChild(exceptionCell);
             row.appendChild(actionsCell);
-
+            
             // Append row to table
             logsTableBody.appendChild(row);
         });
     }
-
+    
     function updatePagination() {
         currentPageElements.forEach(element => {
             element.textContent = `Page ${currentPage + 1}`;
@@ -295,19 +370,19 @@ document.addEventListener('DOMContentLoaded', () => {
             button.disabled = currentPage >= totalPages - 1;
         });
     }
-
+    
     function changePage(newPage) {
         if (newPage >= 0 && newPage < totalPages) {
             currentPage = newPage;
             performSearch();
         }
     }
-
+    
     function showRawLog(rawLog) {
         rawLogContent.textContent = rawLog;
         rawLogModal.style.display = 'block';
     }
-
+    
     function handlePageInputChange() {
         const newPage = parseInt(this.value) - 1; // Convert to 0-based index
         if (newPage >= 0 && newPage < totalPages) {
@@ -319,7 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
-
+    
     // Initialize with default time range (15 minutes)
     updateDateTimeInputs('15m');
 }); 
