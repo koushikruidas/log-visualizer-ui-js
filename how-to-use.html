@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,6 +37,7 @@
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
         }
+
         .nav {
             position: fixed;
             top: 0;
@@ -86,7 +88,7 @@
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--border);
             border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
             padding: 48px 40px;
             animation: fadeIn 1s ease-out;
         }
@@ -121,6 +123,7 @@
             color: var(--text);
             opacity: 0.9;
         }
+
         p {
             margin-bottom: 1.2rem;
             line-height: 1.8;
@@ -129,7 +132,8 @@
             animation: fadeInUp 1s ease-out;
         }
 
-        ul, ol {
+        ul,
+        ol {
             margin: 1.5rem 0;
             padding-left: 1.5rem;
             line-height: 1.8;
@@ -140,7 +144,8 @@
             animation: fadeInUp 1s ease-out;
         }
 
-        pre, code {
+        pre,
+        code {
             background: var(--primary-light);
             border-radius: 12px;
             padding: 1.25rem;
@@ -155,7 +160,7 @@
 
         pre:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
         code {
@@ -171,6 +176,7 @@
             padding: 0;
             color: var(--text);
         }
+
         .step {
             margin-bottom: 3rem;
             padding-bottom: 2rem;
@@ -232,9 +238,17 @@
         }
 
         @keyframes gradientFlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         @media (max-width: 768px) {
@@ -263,19 +277,21 @@
         }
     </style>
 </head>
+
 <body>
     <nav class="nav">
         <a href="index.html" class="nav-logo">
             <svg width="24" height="24" viewBox="0 0 100 100" fill="none">
-                <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="2"/>
-                <path d="M30 50h40" stroke="currentColor" stroke-width="2"/>
+                <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="2" />
+                <path d="M30 50h40" stroke="currentColor" stroke-width="2" />
             </svg>
             Logpulse
         </a>
         <div class="nav-links">
             <a href="dashboard.html" class="nav-link">Dashboard</a>
             <a href="how-to-use.html" class="nav-link">Integration Guide</a>
-            <button id="logoutBtn" class="nav-link" style="border:none;background:transparent;cursor:pointer;">Logout</button>
+            <button id="logoutBtn" class="nav-link"
+                style="border:none;background:transparent;cursor:pointer;">Logout</button>
         </div>
     </nav>
 
@@ -283,7 +299,8 @@
         <div class="hero-section">
             <div class="hero-bar"></div>
             <h1>Integration Guide for <span class="highlight">Logpulse</span></h1>
-            <p>Follow this guide to integrate Logpulse with your application and start visualizing your logs in real-time.</p>
+            <p>Follow this guide to integrate Logpulse with your application and start visualizing your logs in
+                real-time.</p>
         </div>
 
         <!-- Converted Markdown to readable HTML paragraphs and code blocks -->
@@ -292,13 +309,13 @@
             <ul>
                 <li>Java 17 or later</li>
                 <li>Spring Boot application</li>
-                <li>Access to <a href="https://logpulse.io" target="_blank">logpulse.io</a></li>
+                <li>Access to <a href="https://logpulse.dev" target="_blank">logpulse.dev</a></li>
             </ul>
         </div>
 
         <div class="step">
             <h2>1. Add the Log Analyzer Client Dependency</h2>
-            
+
             <h3>Maven Configuration</h3>
             <p>Add the following dependency to your <strong>pom.xml</strong>:</p>
             <pre>&lt;dependency&gt;
@@ -315,13 +332,16 @@
 
             <div class="contact">
                 <h3>📌 Need Help?</h3>
-                <p>Having trouble with the integration? Our support team is here to help! Contact us at <strong>support@logpulse.io</strong></p>
+                <p>Having trouble with the integration? Our support team is here to help! Contact us at
+                    <strong>support@logpulse.dev</strong>
+                </p>
             </div>
         </div>
 
         <div class="step">
             <h2>2. Configure Log4j2</h2>
-            <p>Create or update <strong>log4j2.xml</strong> in <strong>src/main/resources</strong> with properties for Kafka, TLS and the Logpulse admin URL. Example:</p>
+            <p>Create or update <strong>log4j2.xml</strong> in <strong>src/main/resources</strong> with properties for
+                Kafka, TLS and the Logpulse admin URL. Example:</p>
             <pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;Configuration status="info" name="spring-boot-kafka-log"&gt;
   &lt;Properties&gt;
@@ -360,13 +380,15 @@ public class GenerateLogsApplication {
         <div class="step">
             <h2>4. Get Kafka and Logpulse Credentials</h2>
             <div class="contact">
-                To obtain Kafka details (topic name, hosts, certificates, username, password, and token), please contact: <b>koushikruidas@gmail.com</b>
+                To obtain Kafka details (topic name, hosts, certificates, username, password, and token), please
+                contact: <b>koushikruidas@gmail.com</b>
             </div>
         </div>
 
         <div class="step">
             <h2>5. Run Your Application</h2>
-            <p>Build and run your application as usual. Your logs will be sent to logpulse.io via the configured Kafka appender.</p>
+            <p>Build and run your application as usual. Your logs will be sent to logpulse.io via the configured Kafka
+                appender.</p>
         </div>
 
         <div class="step">
@@ -374,84 +396,138 @@ public class GenerateLogsApplication {
             <ul>
                 <li>Ensure all dependencies are downloaded and the repository is accessible.</li>
                 <li>Double-check your Kafka and topic configuration in <strong>log4j2.xml</strong>.</li>
-                <li>Review <a href="https://logpulse.io" target="_blank">logpulse.io documentation</a> for additional setup or troubleshooting steps.</li>
+                <li>Review <a href="https://logpulse.dev" target="_blank">logpulse.io documentation</a> for additional
+                    setup or troubleshooting steps.</li>
             </ul>
         </div>
 
         <div class="footer">
             <p>© 2025 Logpulse. All rights reserved.</p>
-            <p>For more information, visit <a href="https://logpulse.io" class="link" target="_blank">logpulse.io</a> or contact your system administrator.</p>
+            <p>For more information, visit <a href="https://logpulse.dev" class="link" target="_blank">logpulse.dev</a> or
+                contact your system administrator.</p>
         </div>
     </div>
 
     <script src="config.js"></script>
     <script src="auth.js"></script>
     <script>
-        // initialize auth so logout works here too (no redirect if already authenticated)
-        if (window.Auth && typeof window.Auth.init === 'function') {
-            window.Auth.init();
-        }
-        // wire logout
-        (function(){
-            var btn = document.getElementById('logoutBtn');
-            if (btn && window.Auth && typeof window.Auth.logout === 'function') {
-                btn.addEventListener('click', function(){
-                    window.Auth.logout();
-                });
+        (function () {
+            // Must rely on config.js's isPublicPath() helper
+            const isPublic = (typeof window.isPublicPath === 'function') ? window.isPublicPath() : true;
+
+            // Helpers to show/hide logout button
+            function hideLogout() {
+                const btn = document.getElementById('logoutBtn');
+                if (btn) btn.style.display = 'none';
             }
-        })();
-        // Smooth scroll behavior
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
+            function showLogout() {
+                const btn = document.getElementById('logoutBtn');
+                if (btn) btn.style.display = '';
+            }
+
+            // Default: hide logout until we deterministically know auth state
+            hideLogout();
+
+            if (isPublic) {
+                // PUBLIC PAGE: do NOT call Auth.init() (prevents interactive redirect)
+                // But perform a safe, non-redirecting check to see if user is already authenticated.
+                if (window.Auth && typeof window.Auth.getAuthHeader === 'function') {
+                    window.Auth.getAuthHeader()
+                        .then(header => {
+                            if (header) {
+                                // token exists (or was silently refreshed) — show logout
+                                showLogout();
+                            } else {
+                                hideLogout();
+                            }
+                        })
+                        .catch(err => {
+                            // never trigger interactive login from this page
+                            console.warn('Non-fatal auth check failed:', err);
+                            hideLogout();
+                        });
+                } else {
+                    // Auth module not loaded or unavailable — keep logout hidden
+                    hideLogout();
+                }
+            } else {
+                // NOT PUBLIC (defensive): initialize auth normally (this may redirect to Keycloak)
+                if (window.Auth && typeof window.Auth.init === 'function') {
+                    window.Auth.init().then(authenticated => {
+                        if (authenticated) {
+                            showLogout();
+                        } else {
+                            hideLogout();
+                        }
+                    }).catch(err => {
+                        console.error('Auth.init error:', err);
+                        // Auth.init may redirect by design on protected pages
+                    });
+                } else {
+                    hideLogout();
+                }
+            }
+
+            // Wire logout click (if Auth.logout exists, clicking will redirect to logout)
+            (function wireLogout() {
+                const btn = document.getElementById('logoutBtn');
+                if (!btn) return;
+                if (window.Auth && typeof window.Auth.logout === 'function') {
+                    btn.addEventListener('click', () => {
+                        window.Auth.logout();
+                    });
+                } else {
+                    // If logout function isn't available, hide the button to avoid confusion
+                    btn.style.display = 'none';
+                }
+            })();
+
+            // The rest of your public-page client UX (smooth scroll, observer, copy buttons) — unchanged
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
                 });
             });
-        });
 
-        // Intersection Observer for scroll animations
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.transform = 'translateY(0)';
-                    entry.target.style.opacity = '1';
-                }
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.transform = 'translateY(0)';
+                        entry.target.style.opacity = '1';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.step').forEach(step => observer.observe(step));
+
+            document.querySelectorAll('pre').forEach(block => {
+                block.style.position = 'relative';
+                const button = document.createElement('button');
+                button.style.position = 'absolute';
+                button.style.right = '10px';
+                button.style.top = '10px';
+                button.style.padding = '4px 8px';
+                button.style.background = 'rgba(255,255,255,0.1)';
+                button.style.border = 'none';
+                button.style.borderRadius = '4px';
+                button.style.color = 'inherit';
+                button.style.cursor = 'pointer';
+                button.textContent = 'Copy';
+
+                button.addEventListener('click', () => {
+                    navigator.clipboard.writeText(block.textContent);
+                    button.textContent = 'Copied!';
+                    setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+                });
+
+                block.appendChild(button);
             });
-        }, {
-            threshold: 0.1
-        });
-
-        // Observe all step elements
-        document.querySelectorAll('.step').forEach(step => {
-            observer.observe(step);
-        });
-
-        // Code block copy functionality
-        document.querySelectorAll('pre').forEach(block => {
-            block.style.position = 'relative';
-            const button = document.createElement('button');
-            button.style.position = 'absolute';
-            button.style.right = '10px';
-            button.style.top = '10px';
-            button.style.padding = '4px 8px';
-            button.style.background = 'rgba(255,255,255,0.1)';
-            button.style.border = 'none';
-            button.style.borderRadius = '4px';
-            button.style.color = 'inherit';
-            button.style.cursor = 'pointer';
-            button.textContent = 'Copy';
-            
-            button.addEventListener('click', () => {
-                navigator.clipboard.writeText(block.textContent);
-                button.textContent = 'Copied!';
-                setTimeout(() => {
-                    button.textContent = 'Copy';
-                }, 2000);
-            });
-            
-            block.appendChild(button);
-        });
+        })();
     </script>
+
 </body>
+
 </html>
