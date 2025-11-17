@@ -290,8 +290,7 @@
         <div class="nav-links">
             <a href="dashboard.html" class="nav-link">Dashboard</a>
             <a href="how-to-use.html" class="nav-link">Integration Guide</a>
-            <button id="logoutBtn" class="nav-link"
-                style="border:none;background:transparent;cursor:pointer;">Logout</button>
+            <button id="logoutBtn" class="nav-link" style="background:none;border:none;padding:0;font:inherit;cursor:pointer;"><b>Logout</b></button>
         </div>
     </nav>
 
@@ -321,13 +320,13 @@
             <pre>&lt;dependency&gt;
     &lt;groupId&gt;io.github.koushikruidas&lt;/groupId&gt;
     &lt;artifactId&gt;log-analyzer-client&lt;/artifactId&gt;
-    &lt;version&gt;1.0.0&lt;/version&gt;
+    &lt;version&gt;1.0.1&lt;/version&gt;
 &lt;/dependency&gt;</pre>
 
             <h3>Gradle Configuration</h3>
             <p>Add the following to your <strong>build.gradle</strong>:</p>
             <pre>dependencies {
-    implementation 'io.github.koushikruidas:log-analyzer-client:1.0.0'
+    implementation 'io.github.koushikruidas:log-analyzer-client:1.0.1'
 }</pre>
 
             <div class="contact">
@@ -341,16 +340,29 @@
         <div class="step">
             <h2>2. Configure Log4j2</h2>
             <p>Create or update <strong>log4j2.xml</strong> in <strong>src/main/resources</strong> with properties for
-                Kafka, TLS and the Logpulse admin URL. Example:</p>
+                Kafka, TLS and the Logpulse admin URL. Example (minimal):</p>
             <pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;Configuration status="info" name="spring-boot-kafka-log"&gt;
   &lt;Properties&gt;
     &lt;Property name="bootstrap.servers"&gt;${env:KAFKA_SERVERS}&lt;/Property&gt;
     &lt;Property name="apiKey"&gt;${env:LOG_ANALYZER_TOKEN}&lt;/Property&gt;
+    &lt;Property name="kafka.topic"&gt;your-topic-name&lt;/Property&gt;
   &lt;/Properties&gt;
   &lt;Appenders&gt;
     &lt;Kafka name="Kafka" topic="${kafka.topic}"&gt;
       &lt;PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/&gt;
+    &lt;/Kafka&gt;
+
+    &lt;!-- Example: JSON Kafka appender --&gt;
+    &lt;Kafka name="Kafka-json" topic="${kafka.topic}"&gt;
+      &lt;JsonLayout
+              complete="false"
+              compact="true"
+              eventEol="true"
+              properties="true"
+              stacktraceAsString="true"
+              includeTimeMillis="true"
+      /&gt;
     &lt;/Kafka&gt;
   &lt;/Appenders&gt;
   &lt;Loggers&gt;
@@ -359,22 +371,43 @@
     &lt;/Root&gt;
   &lt;/Loggers&gt;
 &lt;/Configuration&gt;</pre>
+
+            <p><strong>Supported log patterns</strong> — Logpulse will accept log entries emitted using any one of the
+                following layouts:</p>
+            <ul>
+                <li><code>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</code></li>
+                <li><code>%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} [%thread] %-5level %logger{36} - %msg%n</code> — with
+                    timezone/offset.</li>
+                <li><code>%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} [%thread] %-5level %logger{36} - %msg%nepoch=%d{UNIX_MILLIS}</code>
+                    — offset plus epoch time.</li>
+                <li>JSON layout via <code>&lt;JsonLayout /&gt;</code> inside a Kafka appender (compact JSON with
+                    <code>includeTimeMillis="true"</code>).</li>
+            </ul>
+
+            <p>Any one of the above formats is acceptable — choose the one that matches your existing logging
+                configuration.</p>
+            <p>Note: You can refer to the github repository <a href="https://github.com/koushikruidas/log-generator" target="_blank">log-generator-demo</a> for more details.</p>
         </div>
 
         <div class="step">
-            <h2>3. Enable Component Scanning for the Log Analyzer Client</h2>
-            <p>In your main application class, add <code>@ComponentScan</code>:</p>
+            <h2>3. Autoconfiguration (no manual component scanning required)</h2>
+            <p>Good news — you no longer need to add <code>@ComponentScan</code> to your application. When the
+                <code>log-analyzer-client</code> library is added as a dependency, Spring Boot autoconfiguration will
+                wire up the necessary components automatically.</p>
+
+            <p>Recommended main class (no extra scanning required):</p>
             <pre>import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.poinciana.loganalyzerClient"})
 public class GenerateLogsApplication {
   public static void main(String[] args) {
     SpringApplication.run(GenerateLogsApplication.class, args);
   }
 }</pre>
+
+            <p>If your application uses a non-standard package layout, ensure your main class is in a parent package
+                that can see your application's beans — otherwise standard Spring Boot packaging rules apply.</p>
         </div>
 
         <div class="step">
@@ -396,6 +429,7 @@ public class GenerateLogsApplication {
             <ul>
                 <li>Ensure all dependencies are downloaded and the repository is accessible.</li>
                 <li>Double-check your Kafka and topic configuration in <strong>log4j2.xml</strong>.</li>
+                <li>Confirm the layout you emit matches one of the supported patterns listed above.</li>
                 <li>Review <a href="https://logpulse.dev" target="_blank">logpulse.io documentation</a> for additional
                     setup or troubleshooting steps.</li>
             </ul>
